@@ -2,6 +2,7 @@ use std::str;
 
 mod forward;
 mod solve;
+mod bitmatrix;
 
 fn main() {
     let mut input : [u8; 32] = [
