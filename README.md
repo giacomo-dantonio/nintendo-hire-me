@@ -65,3 +65,5 @@ I will attempt to solve the Level 2, but I will also think about how to generali
 [Step 1: Rewrite the challenge in Rust](doc/rewrite.md)
 
 [Step 2: Analyze the forward function](doc/analyze.md)
+
+[Step 3: inverting the `confuse` operator](doc/clarify.md)

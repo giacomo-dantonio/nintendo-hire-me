@@ -1,6 +1,7 @@
 use std::str;
 
 mod forward;
+mod solve;
 
 fn main() {
     let mut input : [u8; 32] = [

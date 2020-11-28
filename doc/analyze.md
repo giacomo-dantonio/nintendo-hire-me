@@ -113,3 +113,10 @@ Once I have those I can set
 The operations will then all cancel sequentially givin
 
     forward(input) = target
+
+`clarify` and `enlighten` should be easy to implement, `deconvolute` will
+be more challenging.
+
+I'm not sure whether this approach is considered iterative or not.
+I will have to iterate 256-times to apply the `clarify` and `deconvolute`
+operators after all. Anyway I expect it to be fast.
