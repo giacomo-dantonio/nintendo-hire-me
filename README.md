@@ -60,4 +60,8 @@ Nintendo distinguishes between three kinds of solutions:
 
 I will attempt to solve the Level 2, but I will also think about how to generalize the algorithm to provide all the solutions.
 
+## Tackling the challenge
+
 [Step 1: Rewrite the challenge in Rust](doc/rewrite.md)
+
+[Step 2: Analyze the forward function](doc/analyze.md)
