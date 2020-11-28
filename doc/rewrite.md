@@ -79,7 +79,7 @@ I will start by rewriting the original C-Challenge in Rust. This is what I got.
         let mut output = [0u8; 32];
 
         forward(&mut input, &mut output, &CONFUSION, &DIFFUSION);
-        let str_output = str::from_utf8(&output).unwrap_or("error");
+        let str_output = str::from_utf8(&output[..16]).unwrap_or("error");
 
         println!("{:02x?}", output);
         println!("{}", str_output);

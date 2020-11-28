@@ -48,7 +48,7 @@ fn confuse(input: &[u8; 32]) -> [u8; 32]
 }
 
 // ACHTUNG! input here is output in forward
-fn convolution(input: &[u8; 32]) -> [u8; 32]
+fn convolute(input: &[u8; 32]) -> [u8; 32]
 {
     let mut result = [0u8; 32];
 
@@ -80,8 +80,11 @@ pub fn forward(input: &mut [u8; 32]) -> [u8; 32]
     for _ in 0 .. 256usize
     {
         let tmp = confuse(input);
-        *input = convolution(&tmp);
+        *input = convolute(&tmp);
     }
 
     confuse_alot(&input)
 }
+
+#[cfg(test)]
+mod tests;

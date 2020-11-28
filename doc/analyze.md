@@ -37,6 +37,8 @@ At this point we can see that the function consists of three steps:
 
 The first two step are run `256` times, the last step only once.
 
+## Refactor `forward`
+
 Let's refactor the code to make the three steps explicit.
 
     fn confuse(input: &[u8; 32]) -> [u8; 32]
@@ -50,7 +52,7 @@ Let's refactor the code to make the three steps explicit.
     }
 
     // ACHTUNG! input here is output in forward
-    fn convolution(input: &[u8; 32]) -> [u8; 32]
+    fn convolute(input: &[u8; 32]) -> [u8; 32]
     {
         let mut result = [0u8; 32];
 
@@ -82,8 +84,32 @@ Let's refactor the code to make the three steps explicit.
         for _ in 0 .. 256usize
         {
             let tmp = confuse(input);
-            *input = convolution(&tmp);
+            *input = convolute(&tmp);
         }
 
         confuse_alot(&input)
     }
+
+I aldo added a unit test, to make sure I didn't break anything while refactoring.
+
+## Solution strategy
+
+So what forward is doing is just
+
+    forward(input) = confuse_alot(convolute(confuse(convolute(confuse(...(input))))))
+
+Now I have a strategy. I will try to invert the tree three steps
+`confuse`, `convolute` and `confuse_alot`. That is, I will write three functions
+`clarify` (the opposite of confuse), `deconvolute` and `enlighten` such that
+
+    confuse(clarify(input)) == input
+    convolute(deconvolute(input)) == input
+    confuse_alot(enlighten(input)) == input
+
+Once I have those I can set
+
+    input = clarify(deconvolute(...(clarify(deconvolute(enlighten(target))))))
+
+The operations will then all cancel sequentially givin
+
+    forward(input) = target
