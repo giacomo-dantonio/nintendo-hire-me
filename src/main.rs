@@ -17,4 +17,7 @@ fn main() {
 
     println!("{:02x?}", output);
     println!("{}", str_output);
+
+    // let diff = crate::solve::deconvolute::diffusion_matrix();
+    // println!("{:#?}", diff.inverse());
 }
