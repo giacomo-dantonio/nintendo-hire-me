@@ -47,27 +47,36 @@ impl BitMatrix {
         result
     }
 
-    pub fn sum_vectors(lhs : &[u8; 32], rhs : &[u8; 32]) -> [u8; 32] {
-        let mut result = [0u8; 32];
+    fn make_diffusion_el(row : &[u8; 32]) -> Option<u32> {
+        let mut result = 0u32;
+        for i in 0 .. 32 {
+            if row[i] == 255u8 {
+                result ^= 1 << i;
+            }
+            else if row[i] != 0 {
+                return None;
+            }
+        }
+        Some(result)
+    }
+
+    pub fn to_diffusion(&self) -> Option<[u32; 32]> {
+        let mut result = [0u32; 32];
 
         for i in 0 .. 32 {
-            result[i] = lhs[i] ^ rhs[i];
+            if let Some(mask) = BitMatrix::make_diffusion_el(&self.get_row(&i)) {
+                result[i as usize] = mask;
+            }
+            else {
+                return None;
+            }
         }
 
-        result
+        Some(result)
     }
 
     pub fn inverse(&self) -> Option<BitMatrix> {
         gauss::invert(self)
-    }
-
-    // for triangular matrices this is the determinant
-    pub fn diagonal_product(&self) -> u8 {
-        let mut value = 255u8;
-        for i in 0 .. 32u32 {
-            value &= self.get(&i, &i);
-        }
-        value
     }
 
     pub fn set(&mut self, row : &u32, column : &u32, value: u8) {
@@ -120,16 +129,36 @@ impl BitMatrix {
 
         result
     }
+}
 
-    pub fn swap_rows(&mut self, i : &u32, j : &u32) {
-        let tmp = self.get_row(i);
-        self.set_row(i, &self.get_row(j));
-        self.set_row(j, &tmp);
+#[cfg(test)]
+mod tests {
+    use crate::forward::DIFFUSION;
+
+    #[test]
+    fn inverse_test() {
+        let matrix = super::BitMatrix::from_diffusion(&DIFFUSION);
+        let maybe_inverse = matrix.inverse();
+
+        if let Some(inverse) = maybe_inverse {
+            assert_eq!(super::BitMatrix::identity(), matrix.multiply_m(&inverse));
+            assert_eq!(super::BitMatrix::identity(), inverse.multiply_m(&matrix));
+        }
+        else {
+            panic!("Inverse could not be computed");
+        }
     }
 
-    // i -> i + j
-    pub fn add_row(&mut self, i : &u32, j : &u32) {
-        let row = BitMatrix::sum_vectors(&self.get_row(i), &self.get_row(j));
-        self.set_row(i, &row);
+    #[test]
+    fn diffusion_test() {
+        let matrix = super::BitMatrix::from_diffusion(&DIFFUSION);
+        let maybe_diff = matrix.to_diffusion();
+
+        if let Some(diff) = maybe_diff {
+            assert_eq!(DIFFUSION, diff);
+        }
+        else {
+            panic!("Diffusion could not be computed");
+        }
     }
 }

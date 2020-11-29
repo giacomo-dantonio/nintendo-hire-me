@@ -1,4 +1,6 @@
 use std::str;
+use bitmatrix::BitMatrix;
+use forward::DIFFUSION;
 
 mod forward;
 mod solve;
@@ -17,6 +19,11 @@ fn main() {
 
     println!("{:02x?}", output);
     println!("{}", str_output);
+
+    let matrix = BitMatrix::from_diffusion(&DIFFUSION);
+    let inverse = matrix.inverse().unwrap();
+    let accumulation = inverse.to_diffusion().unwrap();
+    println!("{:#x?}", accumulation);
 
     // let diff = crate::solve::deconvolute::diffusion_matrix();
     // println!("{:#?}", diff.inverse());
