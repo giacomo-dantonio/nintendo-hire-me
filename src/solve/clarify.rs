@@ -1,4 +1,4 @@
-static CLARITY : [Option<usize>; 256] = [
+static CLARITY : [Option<u8>; 256] = [
     Some(106),
     Some(26),
     Some(24),
@@ -14,9 +14,9 @@ static CLARITY : [Option<usize>; 256] = [
     Some(47),
     Some(223),
     Some(70),
-    Some(454),
+    None,
     Some(88),
-    Some(294),
+    None,
     Some(245),
     Some(42),
     Some(247),
@@ -31,7 +31,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(131),
     Some(129),
     Some(4),
-    Some(446),
+    None,
     Some(130),
     Some(240),
     Some(145),
@@ -61,13 +61,13 @@ static CLARITY : [Option<usize>; 256] = [
     Some(216),
     Some(148),
     Some(218),
-    Some(327),
+    None,
     Some(230),
     Some(161),
     Some(162),
     Some(37),
     Some(117),
-    Some(396),
+    None,
     Some(248),
     Some(238),
     Some(100),
@@ -89,7 +89,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(184),
     Some(193),
     Some(75),
-    Some(288),
+    None,
     Some(215),
     Some(59),
     Some(15),
@@ -106,7 +106,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(196),
     Some(80),
     Some(34),
-    Some(380),
+    None,
     Some(62),
     Some(155),
     Some(51),
@@ -116,7 +116,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(32),
     Some(255),
     Some(119),
-    Some(321),
+    None,
     Some(49),
     Some(127),
     Some(21),
@@ -127,7 +127,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(236),
     Some(226),
     Some(103),
-    Some(357),
+    None,
     Some(60),
     Some(165),
     Some(30),
@@ -157,7 +157,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(87),
     Some(187),
     Some(122),
-    Some(495),
+    None,
     Some(201),
     Some(69),
     Some(53),
@@ -174,9 +174,9 @@ static CLARITY : [Option<usize>; 256] = [
     Some(0),
     Some(97),
     Some(173),
-    Some(338),
+    None,
     Some(13),
-    Some(383),
+    None,
     Some(85),
     Some(5),
     Some(120),
@@ -202,7 +202,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(235),
     Some(27),
     Some(105),
-    Some(292),
+    None,
     Some(203),
     Some(170),
     Some(102),
@@ -212,7 +212,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(17),
     Some(20),
     Some(19),
-    Some(275),
+    None,
     Some(143),
     Some(52),
     Some(111),
@@ -227,7 +227,7 @@ static CLARITY : [Option<usize>; 256] = [
     Some(141),
     Some(206),
     Some(107),
-    Some(409),
+    None,
     Some(179),
     Some(78),
     Some(190),
@@ -254,10 +254,10 @@ static CLARITY : [Option<usize>; 256] = [
     Some(225),
     Some(177),
     Some(74),
-    Some(147)    
+    Some(147)
 ];
 
-pub fn clarify(input: &[u8; 32]) -> Option<[usize; 32]> {
+pub fn clarify(input: &[u8; 32]) -> Option<[u8; 32]> {
     let mut result = [0; 32];
     for index in 0 .. 32 {
         if let Some(val) = CLARITY[input[index] as usize] {
@@ -276,7 +276,7 @@ mod tests {
     fn next_input() -> u8
     {
         let mut val : u8 = rand::random::<u8>();
-        while val == 250 {
+        while super::CLARITY[val as usize].is_none() {
             val = rand::random::<u8>()
         }
         val

@@ -38,7 +38,7 @@ pub static DIFFUSION : [u32; 32] = [
     0xb481f26c,0xdc9216a5,0xa9243c5b,0x524879b6,0x4b182fc6,0xcd29615a,0x9a42c3b5,0x2584976b,
     0x81b46cf2,0x92dca516,0x24a95b3c,0x4852b679,0x184bc62f,0x29cd5a61,0x429ab5c3,0x84256b97];
 
-pub fn confuse(input: &[usize; 32]) -> [u8; 32]
+pub fn confuse(input: &[u8; 32]) -> [u8; 32]
 {
     let mut result = [0u8; 32];
     for j in 0 .. 32usize
@@ -80,19 +80,11 @@ pub fn forward(input: &mut [u8; 32]) -> [u8; 32]
 {
     for _ in 0 .. 256usize
     {
-        let tmp = confuse(&as_usize(input));
+        let tmp = confuse(input);
         *input = convolute(&tmp);
     }
 
     confuse_alot(&input)
-}
-
-fn as_usize(arr: &[u8; 32]) -> [usize; 32] {
-    let mut result = [0usize; 32];
-    for i in 0 .. 32 {
-        result[i] = arr[i] as usize;
-    }
-    result
 }
 
 #[cfg(test)]
