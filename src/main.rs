@@ -6,6 +6,16 @@ mod forward;
 mod solve;
 mod bitmatrix;
 
+fn as_bytes(target_str : &str) -> [u8; 32] {
+    let target = target_str.as_bytes();
+    let mut target_32 = [0u8; 32];
+    let len = std::cmp::min(target.len(), 32);
+    for i in 0 .. len {
+        target_32[i] = target[i];
+    }
+    target_32
+}
+
 fn main() {
     let mut input : [u8; 32] = [
         //change only this :
@@ -25,6 +35,7 @@ fn main() {
     let accumulation = inverse.to_diffusion().unwrap();
     println!("{:#x?}", accumulation);
 
-    // let diff = crate::solve::deconvolute::diffusion_matrix();
-    // println!("{:#?}", diff.inverse());
+    let target = as_bytes("Hire me!!!!!!!!");
+    let solution = solve::solve(&target);
+    println!("{:#x?}", solution);
 }

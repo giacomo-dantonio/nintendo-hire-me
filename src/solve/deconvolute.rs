@@ -36,7 +36,7 @@ static ACCUMULATION : [u32; 32] = [
     0x84256b97,
 ];
 
-fn deconvolute(input : &[u8; 32]) -> [u8; 32] {
+pub fn deconvolute(input : &[u8; 32]) -> [u8; 32] {
     let matrix = BitMatrix::from_diffusion(&ACCUMULATION);
     matrix.multiply(input)
 }
