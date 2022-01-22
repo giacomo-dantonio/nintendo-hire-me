@@ -1,5 +1,4 @@
 use crate::forward::CONFUSION;
-use itertools::Itertools;
 
 static LEFT_CLARITY : [Option<u8>; 256] = [
     Some(106), Some(26), Some(24), Some(89), Some(56), Some(86), Some(227),
@@ -100,39 +99,6 @@ pub fn enlighten(input : &[u8; 32]) -> Option<[u8; 32]>
     Some(result)
 }
 
-fn get_pairs(val : u8) -> Vec<(u8, u8)>
-{
-    let mut result = vec![];
-
-    for lindex in 0 .. 256 {
-        let lval = CONFUSION[lindex];
-        for rindex in 0 .. 256 {
-            let rval = CONFUSION[rindex + 256];
-            if lval^rval == val {
-                result.push((lindex as u8, rindex as u8))
-            }
-        }
-    }
-
-    result
-}
-
-pub fn enlighten_iter(input : &[u8; 32]) -> impl Iterator<Item = [u8; 32]> {
-    input[..16].iter()
-        .map(|val| get_pairs(*val))
-        .multi_cartesian_product()
-        .map(|pairs| {
-            let mut result = [0u8; 32];
-            for i in 0 .. 16 {
-                let (lindex, rindex) = pairs[i];
-                result[2 * i as usize] = lindex;
-                result[2 * i + 1 as usize] = rindex;    
-            }
-            result
-        })
-}
-
-
 #[cfg(test)]
 mod tests {
     fn next_input() -> u8
@@ -159,22 +125,6 @@ mod tests {
             }
             else {
                 panic!("Couldn't compute inverse");
-            }
-        }
-    }
-
-    #[test]
-    fn test_enlighten_iter() {
-        for _ in 0 .. 50
-        {
-            let mut input = [0u8; 32];
-            for i in 0 .. 32 {
-                input[i] = next_input();
-            }
-    
-            for inverse in super::enlighten_iter(&input).take(50) {
-                let actual = crate::forward::confuse_alot(&inverse);
-                assert_eq!(input[..16], actual[..16]);
             }
         }
     }
