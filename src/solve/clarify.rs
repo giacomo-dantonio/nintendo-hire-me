@@ -43,6 +43,10 @@ lazy_static! {
     ];
 }
 
+static MISSING_INDICES: [u8; 16] = [
+    15, 17, 32, 62, 68, 90, 107, 117, 128, 158, 175, 177, 203, 213, 228, 250
+];
+
 static CLARITY : [Option<u8>; 256]  = [
     Some(106), Some(26), Some(24), Some(89), Some(56), Some(86), Some(227),
     Some(195), Some(228), Some(95), Some(188), Some(144), Some(47), Some(223),
@@ -102,17 +106,11 @@ pub fn clarify(input: &[u8; 32]) -> Option<[u8; 32]> {
     Some(result)
 }
 
-
-fn make_array(v: &Vec<&u8>) -> [u8; 32] {
-    let mut result = [0u8; 32];
-    for i in 0 .. std::cmp::min(v.len(), 32) {
-        result[i] = *v[i];
-    }
-    result
-}
-
 #[cfg(test)]
 mod tests {
+    use crate::solve::deconvolute::deconvolute;
+    use super::{clarify, MISSING_INDICES};
+
     fn next_input() -> u8
     {
         let mut val : u8 = rand::random::<u8>();
@@ -138,6 +136,22 @@ mod tests {
             else {
                 panic!("Couldn't compute inverse");
             }
+        }
+    }
+
+    #[test]
+    fn test_valid() {
+        for _ in 0 .. 50 {
+            let input: [u8; 32] = rand::random();
+
+            if input.iter().any(|x| MISSING_INDICES.contains(x)) {
+                continue;
+            }
+
+            let clear = clarify(&input).unwrap();
+            let next_input = deconvolute(&clear);
+
+            assert!(next_input.iter().all(|x| !MISSING_INDICES.contains(x)));
         }
     }
 }
